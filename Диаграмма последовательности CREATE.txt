@@ -1,0 +1,41 @@
+participant User
+participant MainWindowController
+participant MainWindow
+participant CreateClientController
+participant CreateClientWindow
+participant Repository
+
+
+    User->>MainWindowController: Start Application
+    activate MainWindowController
+    MainWindowController->>Repository: get_short_list()
+    MainWindowController->>MainWindow: create(data)
+    deactivate MainWindowController
+
+    User->>MainWindow: Click "Create Client"
+    activate MainWindow
+    MainWindow->>MainWindowController: open_create_window()
+    activate MainWindowController
+    MainWindowController->>CreateClientController: create
+    CreateClientController->>CreateClientWindow: show_window()
+    deactivate MainWindowController
+    deactivate MainWindow
+
+    User->>CreateClientWindow: Fill form data
+    User->>CreateClientWindow: Click "Create"
+    activate CreateClientWindow
+    CreateClientWindow->>CreateClientController: create_client()
+    activate CreateClientController
+    CreateClientController->>CreateClientWindow: get_form_data()
+    CreateClientController->>CreateClientController: validate_data()
+    alt validation passed
+        CreateClientController->>Repository: add(client_data)
+        CreateClientController->>Repository: get_short_list()
+        CreateClientController->>CreateClientWindow: notify_observers(data)
+        CreateClientWindow->>MainWindow: update(data)
+        CreateClientController->>CreateClientWindow: destroy()
+    else validation failed
+        CreateClientController->>CreateClientWindow: show_errors(errors)
+    end
+    deactivate CreateClientController
+    deactivate CreateClientWindow

@@ -1,0 +1,38 @@
+participant User
+participant MainWindowController
+participant MainWindow
+participant DeleteClientController
+participant DeleteClientWindow
+participant Repository
+
+
+    User->>MainWindowController: Start Application
+    activate MainWindowController
+    MainWindowController->>Repository: get_short_list()
+    MainWindowController->>MainWindow: create(data)
+    deactivate MainWindowController
+
+    User->>MainWindow: Click "Delete Client"
+    activate MainWindow
+    MainWindow->>MainWindowController: open_delete_window()
+    activate MainWindowController
+    MainWindowController->>DeleteClientController: delete
+    DeleteClientController->>DeleteClientWindow: show_window()
+    alt click ok
+    User->>DeleteClientWindow: Click "Ok"
+      alt validation passed
+        DeleteClientController->>Repository: delete(client_data)
+        DeleteClientController->>Repository: get_short_list()
+        DeleteClientController->>DeleteClientWindow: notify_observers(data)
+        DeleteClientWindow->>MainWindow: update(data)
+        DeleteClientController->>DeleteClientWindow: destroy()
+    else validation failed
+        DeleteClientController->>DeleteClientWindow: show_errors(errors)
+    end
+
+    else click close
+    User->>DeleteClientWindow: Click "Close"
+    DeleteClientController->>DeleteClientWindow: destroy()
+    end
+    deactivate MainWindowController
+    deactivate MainWindow
