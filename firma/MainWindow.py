@@ -35,9 +35,11 @@ class MainWindow(Tk, Observer):
         self.button_create = ttk.Button(button_frame, text='Создать клиента')
         self.button_create.pack(side=LEFT, padx=5)
 
+        self.button_delete = ttk.Button(button_frame, text='Удалить клиента')
+        self.button_delete.pack(side=LEFT, padx=5)
+
         ttk.Button(button_frame, text='Просмотр деталей').pack(side=LEFT, padx=5)
         ttk.Button(button_frame, text='Обновить данные').pack(side=LEFT, padx=5)
-        ttk.Button(button_frame, text='Удалить клиента').pack(side=LEFT, padx=5)
 
     def update(self, data):
         # Очищаем текущие данные

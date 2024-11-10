@@ -1,4 +1,3 @@
-# CreateClientController.py
 from firma.CreateClientWindow import CreateClientWindow
 
 class CreateClientController:
