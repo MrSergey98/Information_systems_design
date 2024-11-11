@@ -1,0 +1,19 @@
+actor User
+participant MainWindowController
+participant MainWindow
+participant ClientRepJson
+participant "repository:ClientRepFileAdapter" as repository
+participant "main_window:MainWindow" as main_window
+
+
+    User->>MainWindowController: Start Application
+    MainWindowController->>repository: __init__
+    MainWindowController->>main_window: __init__(data=repository.get_short_list())
+    main_window->>main_window: create_widgets()
+    main_window->>main_window: update(data)
+    MainWindowController->>MainWindowController: setup_handlers
+    MainWindowController->>main_window: mainloop()
+    main_window->>MainWindow: display
+    MainWindow->>User: Display window
+
+   
