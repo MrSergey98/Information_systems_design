@@ -13,7 +13,6 @@ participant "main_window:MainWindow" as main_window
     main_window->>main_window: update(data)
     MainWindowController->>MainWindowController: setup_handlers
     MainWindowController->>main_window: mainloop()
-    main_window->>MainWindow: display
-    MainWindow->>User: Display window
+    main_window->>User: Display window
 
    
