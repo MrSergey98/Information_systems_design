@@ -1,41 +1,38 @@
-participant User
+actor User
 participant MainWindowController
 participant MainWindow
+participant ClientRepJson
 participant CreateClientController
-participant CreateClientWindow
-participant Repository
+participant "repository:ClientRepFileAdapter" as repository
+participant "main_window:MainWindow" as main_window
+participant "view:CreateClientWindow" as view
+participant "create_controller:CreateClientController" as create_controller
 
+    User->>main_window: Click button "Create client"
+    main_window->>MainWindowController: open_create_window()
+    MainWindowController->>create_controller: __init__()
+    create_controller->>CreateClientController: __init__(main_window, repository)
+    CreateClientController->>CreateClientController: show_window()
+    CreateClientController->>view: __init__()
+    view->>CreateClientWindow: __init__(parent)
+    CreateClientWindow->>CreateClientWindow: create_widgets()
+    CreateClientWindow->>CreateClientWindow: register_observer(parent)
+    CreateClientController->>CreateClientController: setup_handlers()
+    CreateClientController->>view: bind_create_button(create_client)
+    view->>User: Display window "Create client"
 
-    User->>MainWindowController: Start Application
-    activate MainWindowController
-    MainWindowController->>Repository: get_short_list()
-    MainWindowController->>MainWindow: create(data)
-    deactivate MainWindowController
-
-    User->>MainWindow: Click "Create Client"
-    activate MainWindow
-    MainWindow->>MainWindowController: open_create_window()
-    activate MainWindowController
-    MainWindowController->>CreateClientController: create
-    CreateClientController->>CreateClientWindow: show_window()
-    deactivate MainWindowController
-    deactivate MainWindow
-
-    User->>CreateClientWindow: Fill form data
-    User->>CreateClientWindow: Click "Create"
-    activate CreateClientWindow
-    CreateClientWindow->>CreateClientController: create_client()
-    activate CreateClientController
-    CreateClientController->>CreateClientWindow: get_form_data()
-    CreateClientController->>CreateClientController: validate_data()
+    User->>view: Fill form data
+    User->>view: Click "Create"
+    view->>CreateClientController: create_client()
+    CreateClientController->>view: get_form_data()
+    CreateClientController->>CreateClientController: validate_data(client_data)
     alt validation passed
-        CreateClientController->>Repository: add(client_data)
-        CreateClientController->>Repository: get_short_list()
-        CreateClientController->>CreateClientWindow: notify_observers(data)
-        CreateClientWindow->>MainWindow: update(data)
-        CreateClientController->>CreateClientWindow: destroy()
+        CreateClientController->>repository: add(client_data)
+        CreateClientController->>view: notify_observers(repository.get_short_list())
+        view->>main_window: update(data)
+        CreateClientController->>view: destroy()
+        view->>User: Window "Create client" closed
     else validation failed
-        CreateClientController->>CreateClientWindow: show_errors(errors)
+        CreateClientController->>view: show_errors(errors)
+        view->>User: Displays error message
     end
-    deactivate CreateClientController
-    deactivate CreateClientWindow
