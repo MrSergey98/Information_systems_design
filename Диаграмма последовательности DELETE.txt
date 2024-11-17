@@ -1,38 +1,49 @@
-participant User
+actor User
 participant MainWindowController
 participant MainWindow
+participant ClientRepJson
 participant DeleteClientController
-participant DeleteClientWindow
-participant Repository
+participant "repository:ClientRepFileAdapter" as repository
+participant "main_window:MainWindow" as main_window
+participant "view:DeleteClientWindow" as view
+participant "delete_controller:DeleteClientController" as delete_controller
 
 
-    User->>MainWindowController: Start Application
-    activate MainWindowController
-    MainWindowController->>Repository: get_short_list()
-    MainWindowController->>MainWindow: create(data)
-    deactivate MainWindowController
+    User->>main_window: Click "Delete user"
+    main_window->>MainWindowController: open_delete_window()
+    MainWindowController->>delete_controller: __init__()
+    delete_controller->>DeleteClientController: __init__(main_window, repository)
+    DeleteClientController->>DeleteClientController: show_window()
+    DeleteClientController->>view: __init__()
+    view->>DeleteClientWindow: __init__(parent)
+    DeleteClientWindow->>DeleteClientWindow: create_widgets()
+    DeleteClientWindow->>DeleteClientWindow: register_observer(parent)
+    DeleteClientController->>setup_handlers()
+    DeleteClientController->>view: bind_confirm_button()
+    DeleteClientController->>view: bind_close_button()
+    view->>User: Displays "Delete client" window
+    alt User clicks "Confirm" button
+        User->>view: Click "Confirm" button
+        view->>DeleteClientController: delete_client()
+        DeleteClientController->>DeleteClientController: validate_data(data)
+        alt validation passed
+            DeleteClientController->>repository: delete(client_for_deletion_id)
+            DeleteClientController->>view: notify_observers(repository.get_short_list())
+            view->>main_window: update(data)
+            DeleteClientController->>view: destroy()
+            view->>User: Close "Delete client" window
+        else validation failed
+            DeleteClientController->>view: show_errors(errors)
+            view->>User: Displays error message
+            DeleteClientController->>DeleteClientController: on_closing()
+            DeleteClientController->>view: destroy()
+            view->>User: Close "Delete client" window
+        end
 
-    User->>MainWindow: Click "Delete Client"
-    activate MainWindow
-    MainWindow->>MainWindowController: open_delete_window()
-    activate MainWindowController
-    MainWindowController->>DeleteClientController: delete
-    DeleteClientController->>DeleteClientWindow: show_window()
-    alt click ok
-    User->>DeleteClientWindow: Click "Ok"
-      alt validation passed
-        DeleteClientController->>Repository: delete(client_data)
-        DeleteClientController->>Repository: get_short_list()
-        DeleteClientController->>DeleteClientWindow: notify_observers(data)
-        DeleteClientWindow->>MainWindow: update(data)
-        DeleteClientController->>DeleteClientWindow: destroy()
-    else validation failed
-        DeleteClientController->>DeleteClientWindow: show_errors(errors)
+
+    else User clicks "Close" button
+        User->>view: Click "Close" button
+        view->>DeleteClientController: on_closing()
+        DeleteClientController->>view: destroy()
+        view->>User: Close "Delete client" window
     end
-
-    else click close
-    User->>DeleteClientWindow: Click "Close"
-    DeleteClientController->>DeleteClientWindow: destroy()
-    end
-    deactivate MainWindowController
-    deactivate MainWindow
