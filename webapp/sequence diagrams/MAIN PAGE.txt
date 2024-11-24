@@ -7,6 +7,9 @@ participant "repository: ClientRepFileAdapter" as repository
 
 participant jinja_env
 
+
+
+
 User->>server: GET /
 server->>request_handler: do_GET
 request_handler->>MainWebController: __init__(request_handler=self)
@@ -16,7 +19,7 @@ BasicWebController->>MainWebController: handle_get()
 MainWebController->>request_handler: send_response(200)
 MainWebController->>request_handler: send_header()
 MainWebController->>request_handler: end_headers()
-
+MainWebController->>repository: get_short_list()
 MainWebController->>jinja_env: get_template('webapp/index.html')
 
 MainWebController->>request_handler: wfile.write(template)
