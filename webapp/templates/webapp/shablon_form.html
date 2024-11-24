@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ view }}</title>
+    <style>
+        body {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            appearance: auto;
+            cursor: default;
+            padding-block: 1px;
+            padding-inline: 6px;
+            background-color: buttonface;
+            border: 1px solid black;
+            border-radius: 2px;
+            outline: none;
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="margin: 15px;">Данные клиента:</h2>
+    {% if error %} {{ error }} {% endif %}
+    <form method="post">
+        {% for field, field_trans in fields.items() %}
+            <div style="margin: 15px;">
+                <input name="{{ field }}" type="text" placeholder="{{ field_trans }}" {% if not can_edit_fields %} disabled {% endif %}>
+            </div>
+        {% endfor %}
+        <button type="submit" style="margin: 15px;">Отправить</button>
+        <a href="/" style="">Назад</a>
+    </form>
+</body>
+</html>
