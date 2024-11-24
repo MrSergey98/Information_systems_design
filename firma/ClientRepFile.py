@@ -62,11 +62,17 @@ class ClientRepFile:
         surname, 
         fathersname,
         pasport,
-        balance=None,
+        balance,
     ):
         ids, emails = self.__ids(), self.__emails()
         if email in emails:
             raise ValueError('Поле email - уникально.')
+        if not email:
+            raise ValueError('Поле email - не может быть пустым.')
+        if not firstname:
+            raise ValueError('Поле Имя - не может быть пустым.')
+        if not surname:
+            raise ValueError('Поле Фамилия - не может быть пустым.')
         ids.sort()
 
         id = 0
