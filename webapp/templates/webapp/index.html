@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>LR4</title>
+    <style>
+        body {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            appearance: auto;
+            cursor: default;
+            padding-block: 1px;
+            padding-inline: 6px;
+            background-color: buttonface;
+            border: 1px solid black;
+            border-radius: 2px;
+            outline: none;
+            color: black;
+            text-decoration: none;
+        }
+        table {
+            width: 50%;
+            margin-bottom: 20px;
+            border: 1px solid #dddddd;
+            border-collapse: collapse;
+        }
+        table th {
+            font-weight: bold;
+            padding: 5px;
+            background: #efefef;
+            border: 1px solid #dddddd;
+        }
+        table td {
+            border: 1px solid #dddddd;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ header }}</h1>
+    <table>
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Email</th>
+        </tr>
+        {% for client_data in data %}
+            <tr>
+                <td>
+                    {{ client_data['firstname'] }}
+                </td>
+                <td>
+                    {{ client_data['surname'] }}
+                </td>
+                <td>
+                    {{ client_data['email'] }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="/client_new">Создать клиента</a>
+</body>
+</html>
