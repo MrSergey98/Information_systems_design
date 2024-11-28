@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>{{ view }}</title>
     <style>
+        form {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+
         body {
             align-items: center;
             display: flex;
@@ -29,10 +35,13 @@
     <form method="post">
         {% for field, field_trans in fields.items() %}
             <div style="margin: 15px;">
-                <input name="{{ field }}" type="text" placeholder="{{ field_trans }}" {% if not can_edit_fields %} disabled {% endif %}>
+                <label style="margin-bottom: 5px;" for="{{ field }}">{{ field_trans }}:</label><br>
+                <input id="{{ field }}" name="{{ field }}" type="text" placeholder="{{ field_trans }}" value="{% if data %}{{data.get(field)}}{% endif %}" {% if not can_edit_fields %} disabled {% endif %}>
             </div>
         {% endfor %}
-        <button type="submit" style="margin: 15px;">Отправить</button>
+        {% if can_edit_fields %}
+            <button type="submit" style="margin: 15px;">Отправить</button>
+        {% endif %}
         <a href="/" style="">Назад</a>
     </form>
 </body>

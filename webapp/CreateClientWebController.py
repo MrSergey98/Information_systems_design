@@ -14,6 +14,7 @@ class CreateClientWebController(BasicWebController):
             'view': 'client_new',
             'can_edit_fields': True,
             'error': error,
+            'data': None,
         }
         template = jinja_env.get_template('webapp/shablon_form.html')
         self.request_handler.wfile.write(bytes(template.render(context), 'utf-8'))
