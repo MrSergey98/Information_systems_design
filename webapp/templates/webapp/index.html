@@ -41,6 +41,15 @@
             text-align: center;
         }
     </style>
+    <script>
+        function deleteClient(id) {
+            const response = fetch(
+                `/client_delete/${id}`,
+                {method: "POST"}
+            );
+            location.reload();
+        }
+    </script>
 </head>
 <body>
     <h1>{{ header }}</h1>
@@ -50,6 +59,7 @@
             <th>Фамилия</th>
             <th>Email</th>
             <th>Просмотр деталей</th>
+            <th>Удаление</th>
         </tr>
         {% for client_data in data %}
             <tr>
@@ -64,6 +74,11 @@
                 </td>
                 <td>
                     <a href="client_details/{{ client_data['id'] }}">Детали</a>
+                </td>
+                <td>
+                    <button onclick="deleteClient({{ client_data['id'] }})">
+                        Удалить
+                    </button>
                 </td>
             </tr>
         {% endfor %}

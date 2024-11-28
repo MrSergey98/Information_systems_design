@@ -1,8 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from webapp.CreateClientWebController import CreateClientWebController
+from webapp.DeleteClientWebController import DeleteClientWebController
 from webapp.DetailsClientWebController import DetailsClientWebController
 from webapp.MainWebController import MainWebController
+
 
 class PathMapperHttp(BaseHTTPRequestHandler):
 
@@ -14,9 +16,6 @@ class PathMapperHttp(BaseHTTPRequestHandler):
         if self.path == '/client_new':
             CreateClientWebController(self)
 
-        if self.path == '/client_delete':
-            DeleteClientWebController(self)
-
         if self.path.split('/')[1] == 'client_details':
             DetailsClientWebController(self)
 
@@ -26,11 +25,9 @@ class PathMapperHttp(BaseHTTPRequestHandler):
         if self.path == '/client_new':
             CreateClientWebController(self)
 
-        if self.path == '/client_delete':
+        if self.path.split('/')[1] == 'client_delete':
             DeleteClientWebController(self)
 
-        if self.path == '/client_details':
-            DetailsClientWevController(self)
 
 
 if __name__ == '__main__':
