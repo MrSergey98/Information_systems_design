@@ -1,0 +1,22 @@
+actor User
+participant "server: HTTPServer" as server
+participant "request_handler: PathMapperHttp" as request_handler
+participant DetailsClientWebController
+participant BasicWebController
+participant "repository: ClientRepFileAdapter" as repository
+
+participant jinja_env
+
+
+
+User->>server: GET /client_details
+server->>request_handler: do_GET()
+request_handler->>DetailsClientWebController: __init__()
+DetailsClientWebController->>BasicWebController: __init__()
+BasicWebController->>repository: __init__()
+BasicWebController->>DetailsClientWebController :handle_get()
+DetailsClientWebController->>request_handler: send_response(200)
+DetailsClientWebController->>request_handler: send_header()
+DetailsClientWebController->>request_handler: end_headers()
+DetailsClientWebController->>jinja_env:get_template('webapp/shablon_form.html')
+DetailsClientWebController->>request_handler: wfile.write(template)
