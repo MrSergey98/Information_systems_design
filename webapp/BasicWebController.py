@@ -1,25 +1,20 @@
 from abc import ABC, abstractmethod
+from http.server import BaseHTTPRequestHandler
 
 from firma.ClientRepFile import ClientRepFile
 from firma.ClientRepFileAdapter import ClientRepFileAdapter
 from firma.ClientRepJson import ClientRepJson
-from http.server import BaseHTTPRequestHandler
 
 
-class BasicWebController(ABC):
+class BasicController(ABC):
 
-    def __init__(self, request_handler: BaseHTTPRequestHandler):
+    def __init__(self):
         self.repository = ClientRepFileAdapter(ClientRepFile(ClientRepJson))
-        self.request_handler = request_handler
-        if self.request_handler.command == 'GET':
-            self.handle_get()
-        if self.request_handler.command == 'POST':
-            self.handle_post()
 
     @abstractmethod
-    def handle_get(self):
+    def get_web_view(self, **kwargs):
         pass
 
     @abstractmethod
-    def handle_post(self):
+    def get_app_view(self, **kwargs):
         pass
