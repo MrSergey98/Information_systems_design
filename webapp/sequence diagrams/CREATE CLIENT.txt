@@ -1,7 +1,7 @@
 actor User
 participant "server: HTTPServer" as server
 participant "request_handler: PathMapperHttp" as request_handler
-participant CreateClientWebController
+participant "controller:CreateClientWebController" as CreateClientWebController
 participant BasicWebController
 participant "repository: ClientRepFileAdapter" as repository
 
@@ -14,31 +14,21 @@ server->>request_handler: do_GET()
 request_handler->>CreateClientWebController: __init__()
 CreateClientWebController->>BasicWebController: __init__()
 BasicWebController->>repository: __init__()
-BasicWebController->>CreateClientWebController :handle_get()
-CreateClientWebController->>request_handler: send_response(200)
-CreateClientWebController->>request_handler: send_header()
-CreateClientWebController->>request_handler: end_headers()
+request_handler->>request_handler: display_view()
+request_handler->>CreateClientWebController: get_web_view()
 CreateClientWebController->>jinja_env:get_template('webapp/shablon_form.html')
-CreateClientWebController->>request_handler: wfile.write(template)
+request_handler->>request_handler: wfile.write(template)
 
 User->>server: POST /client_new
 server->>request_handler: do_POST()
-request_handler->>CreateClientWebController: __init__()
-CreateClientWebController->>BasicWebController: __init__()
-BasicWebController->>repository: __init__()
-BasicWebController->>CreateClientWebController :handle_post()
-CreateClientWebController->>request_handler: rfile.read()
-CreateClientWebController->>repository: add(post_data)
+request_handler->>CreateClientWebController: handle_post(data_dict)
+CreateClientWebController->>repository: add(data)
 alt validation_passed
-  CreateClientWebController->>request_handler: send_response(301)
-CreateClientWebController->>request_handler: send_header()
-CreateClientWebController->>request_handler: end_headers()
+  request_handler->>request_handler: send_response(301)
 else validation_faild
-  CreateClientWebController->>CreateClientWebController :handle_get(error=e)
-CreateClientWebController->>request_handler: send_response(200)
-CreateClientWebController->>request_handler: send_header()
-CreateClientWebController->>request_handler: end_headers()
+  request_handler->>request_handler :display_view(error=e)
+request_handler->>CreateClientWebController: get_web_view(error=e)
 CreateClientWebController->>jinja_env:get_template('webapp/shablon_form.html')
-CreateClientWebController->>request_handler: wfile.write(template)
+request_handler->>request_handler: send_response(200)
+request_handler->>request_handler: wfile.write(view)
 end
-
