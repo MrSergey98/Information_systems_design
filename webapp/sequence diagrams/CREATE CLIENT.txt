@@ -1,8 +1,8 @@
 actor User
 participant "server: HTTPServer" as server
 participant "request_handler: PathMapperHttp" as request_handler
-participant "controller:CreateClientWebController" as CreateClientWebController
-participant BasicWebController
+participant "controller:CreateClientController" as CreateClientWebController
+participant "BasicController" as BasicWebController
 participant "repository: ClientRepFileAdapter" as repository
 
 participant jinja_env
@@ -21,11 +21,14 @@ request_handler->>request_handler: wfile.write(template)
 
 User->>server: POST /client_new
 server->>request_handler: do_POST()
-request_handler->>CreateClientWebController: handle_post(data_dict)
+request_handler->>CreateClientWebController: __init__()
+CreateClientWebController->>BasicWebController: __init__()
+BasicWebController->>repository: __init__()
+request_handler->>CreateClientWebController:handle_post(data_dict)
 CreateClientWebController->>repository: add(data)
 alt validation_passed
-  request_handler->>request_handler: send_response(301)
-else validation_faild
+  request_handler->>request_handler: send_response(300)
+else validation_failed
   request_handler->>request_handler :display_view(error=e)
 request_handler->>CreateClientWebController: get_web_view(error=e)
 CreateClientWebController->>jinja_env:get_template('webapp/shablon_form.html')

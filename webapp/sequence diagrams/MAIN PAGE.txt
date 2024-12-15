@@ -1,13 +1,11 @@
 actor User
 participant "server: HTTPServer" as server
 participant "request_handler: PathMapperHttp" as request_handler
-participant "MainWebController:controller" as MainWebController
-participant BasicWebController
+participant "MainController:controller" as MainWebController
+participant "BasicController" as BasicWebController
 participant "repository: ClientRepFileAdapter" as repository
 
 participant jinja_env
-
-
 
 
 User->>server: GET /

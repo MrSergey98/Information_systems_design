@@ -1,8 +1,8 @@
 actor User
 participant "server: HTTPServer" as server
 participant "request_handler: PathMapperHttp" as request_handler
-participant DeleteClientWebController
-participant BasicWebController
+participant "DeleteClientController" as DeleteClientWebController
+participant "BasicController" as BasicWebController
 participant "repository: ClientRepFileAdapter" as repository
 
 
@@ -13,8 +13,6 @@ server->>request_handler: do_POST()
 request_handler->>DeleteClientWebController: __init__()
 DeleteClientWebController->>BasicWebController: __init__()
 BasicWebController->>repository: __init__()
-BasicWebController->>DeleteClientWebController :handle_post()
+request_handler->>DeleteClientWebController :handle_post()
 DeleteClientWebController->>repository: delete(id)
-DeleteClientWebController->>request_handler: send_response(200)
-DeleteClientWebController->>request_handler: send_header()
-DeleteClientWebController->>request_handler: end_headers()
+request_handler->>request_handler: send_300_redirect_main_headers()
